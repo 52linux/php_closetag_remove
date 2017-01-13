@@ -31,8 +31,8 @@ function check_close_tag ($filename) {
         $l = strlen($s);
         $pos = strrpos($s,"?>");
         $pos2 = strrpos($s,"<?php");
-        var_dump($pos);
-        var_dump($pos2);
+        //var_dump($pos);
+        //var_dump($pos2);
 
         if($pos > $pos2)
         {
