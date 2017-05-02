@@ -1,23 +1,19 @@
 <?php
-if (isset($_GET['dir'])){ //设置文件目录
+if (isset($_GET['dir'])){  
 $basedir=$_GET['dir'];
 }else{
 $basedir = '.';
 }
 checkdir($basedir);
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 function checkdir($basedir){
     if ($dh = opendir($basedir)) {
         while (($file = readdir($dh)) !== false) {
             if ($file != '.' && $file != '..'){
-                if (!is_dir($basedir."/".$file)) {
-                    echo "filename: $basedir/$file ".check_close_tag("$basedir/$file")." <br>";
+                $dirname = $basedir. DIRECTORY_SEPARATOR . $file;
+                if (!is_dir($dirname)) {
+                    echo "filename: $dirname ".check_close_tag($dirname)." <br>";
                 }else{
-                    $dirname = $basedir."/".$file;
                     checkdir($dirname);
                 }
             }
@@ -42,7 +38,7 @@ function check_close_tag ($filename) {
                 //echo "empty";
                 if(isset($_GET['w'])){
                     rewrite ($filename, $s2);
-                    return ("<font color=red>found, automatically removed.</font>");
+                    return ("<font color=red>found, automatically removed.</font>");                     
                 }else{
                     return ("<font color=red>found</font>");
                 }
@@ -57,8 +53,13 @@ function check_close_tag ($filename) {
 
 
 function rewrite ($filename, $data) {
-    $filenum = fopen($filename, "w");
-    flock($filenum, LOCK_EX);
-    fwrite($filenum, $data);
-    fclose($filenum);
+    $filenum = @fopen($filename, "w");
+    if($filenum){
+        flock($filenum, LOCK_EX);
+        fwrite($filenum, $data);
+        fclose($filenum);
+        return "OK";
+    }else{
+        return "ERROR"; 
+    }
 }
